@@ -6,19 +6,26 @@ import (
 	"os"
 )
 
-func Parse()(string, *int, *int, *bool) {
-		var flagAlias = map[string]string{
-				"v": "verbose",
-		}
+type Arguments struct {
+    FileName string
+    XIndex int
+    YIndex int
+    Verbose bool
+}
 
-		if len(os.Args) < 2 {
+func Parse() Arguments {
+    var flagAlias = map[string]string{
+        "v": "verbose",
+    }
+
+    if len(os.Args) < 2 {
         fmt.Println("Usage: lsf -x <x column index> -y <y column index> -v <true/false> <csv file>")
         os.Exit(1)
     }
 
-    xIndex := flag.Int("x", 0, "x column index")
-    yIndex := flag.Int("y", 1, "y column index")
-    verbose := flag.Bool("v", false, "verbose output")
+    XIndex := flag.Int("x", 0, "x column index")
+    YIndex := flag.Int("y", 1, "y column index")
+    Verbose := flag.Bool("v", false, "verbose output")
 
     for from, to := range flagAlias {
         flagSet := flag.Lookup(from)
@@ -26,7 +33,7 @@ func Parse()(string, *int, *int, *bool) {
     }
 
     flag.Parse()
-    fileName := (flag.Args())[0]
+    FileName := (flag.Args())[0]
 
-    return fileName, xIndex, yIndex, verbose
+    return Arguments{FileName, *XIndex, *YIndex, *Verbose}
 }

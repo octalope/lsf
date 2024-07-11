@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func Read(fileName string, xIndex *int, yIndex *int) (floatRecords [][]float64, n int) {
+func Read(fileName string, xIndex int, yIndex int) (floatRecords [][]float64, n int) {
     records, err := readCsvFile(fileName)
     if err != nil {
         fmt.Println("Error reading CSV file", err)
@@ -26,12 +26,12 @@ func Read(fileName string, xIndex *int, yIndex *int) (floatRecords [][]float64, 
         os.Exit(1)
     }
 
-    if *xIndex < 0 || *xIndex >= cols {
+    if xIndex < 0 || xIndex >= cols {
         fmt.Println("x column index must be between 0 and", cols - 1, ".")
         os.Exit(1)
     }
 
-    if *yIndex < 0 || *yIndex >= cols {
+    if yIndex < 0 || yIndex >= cols {
         fmt.Println("y column index must be between 0 and", cols - 1, ".")
         os.Exit(1)
     }

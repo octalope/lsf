@@ -22,8 +22,8 @@ func printData(data [][]float64) {
 }
 
 
-func maybeOutputData(verbose *bool, floatRecords [][]float64) {
-    if *verbose {
+func maybeOutputData(verbose bool, floatRecords [][]float64) {
+    if verbose {
       printData(floatRecords)
     }
 }
@@ -36,13 +36,14 @@ func outputResult(m float64, dm float64, b float64, db float64, rr float64, n in
 }
 
 func main() {
-    fileName, xIndex, yIndex, verbose := args.Parse();
+    args := args.Parse();
+    fmt.Println(args)
 
-    fmt.Print("Least Squares Fit of ", fileName, " - column ", *yIndex, " versus column ", *xIndex, "\n")
+    fmt.Print("Least Squares Fit of ", args.FileName, " - column ", args.YIndex, " versus column ", args.XIndex, "\n")
 
-    floatRecords, n := dataReader.Read(fileName, xIndex, yIndex)
-    m, dm, b, db, rSquared := stats.LeastSquaresFit(floatRecords, *xIndex, *yIndex)
+    floatRecords, n := dataReader.Read(args.FileName, args.XIndex, args.YIndex)
+    m, dm, b, db, rSquared := stats.LeastSquaresFit(floatRecords, args.XIndex, args.YIndex)
 
-    maybeOutputData(verbose, floatRecords)
+    maybeOutputData(args.Verbose, floatRecords)
     outputResult(m, dm, b, db, rSquared, n)
 }
