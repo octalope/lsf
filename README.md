@@ -11,7 +11,7 @@ This repository contains the source code for the `lsf` project. `lsf` is a comma
 To install `lsf`, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/octalope/lsf.git`
-2. Build the executable: `go build src`
+2. Build the executable: `go build .`
 3. Run `lsf` using the generated executable: `./lsf`
 
 ## Usage
