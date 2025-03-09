@@ -32,7 +32,7 @@ To use `lsf`, run the following command:
 ### Example
 
 ```bash
-./lsf -x 0 -y 1 -verbose ./data/data.csv
+./lsf -x 0 -y 1 --verbose ./data/data.csv                
 Least Squares Fit of ./data/data.csv - column 1 versus column 0
 [1      1.03    5.09    ]
 [2      1.97    8.04    ]
@@ -41,9 +41,9 @@ Least Squares Fit of ./data/data.csv - column 1 versus column 0
 [5      4.97    16.88   ]
 [6      6.02    19.93   ]
 
-m: 0.9965714285714279 ± 0.021256535633310116
-b: 0.002000000000002019 ± 0.004059617903757094
-rr: 0.9999336894739406
+m: 0.9966 ± 0.0213
+b: 0.0020 ± 0.0041
+rr: 0.9999
 n: 6
 ```
 
