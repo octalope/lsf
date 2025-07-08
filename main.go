@@ -35,7 +35,6 @@ func outputResult(m float64, dm float64, b float64, db float64, rr float64, n in
 
 func main() {
 	args := args.Parse()
-	fmt.Println(args)
 
 	fmt.Print("Least Squares Fit of ", args.FileName, " - column ", args.YIndex, " versus column ", args.XIndex, "\n")
 
