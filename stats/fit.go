@@ -4,36 +4,74 @@ import (
 	"math"
 )
 
-type Sums struct {
-	x, y, xx, xy, yy float64
+type Statistics struct {
+	n float64		  // 	Number of records
+	Sx float64	  // 	Sum of x values
+	Sy float64	  // 	Sum of y values
+	meanX	float64	// 	Mean of x values
+	meanY float64	// 	Mean of y values
+	SSxx float64	// 	SSxx: Sum of squares of x deviations
+	SSyy float64 	// 	SSyy: Sum of squares of y deviations
+	SSxy float64	// 	SSxy: Sum of products of x and y deviations
 }
 
-func calculateSums(records [][]float64, xIndex int, yIndex int) Sums {
-	var x, y, xx, xy, yy float64
+func calculateStats(records [][]float64, xIndex int, yIndex int) Statistics {	
+	n := float64(len(records))
+	
+	var Sx, Sy float64
 	for _, record := range records {
-		x += record[xIndex]
-		y += record[yIndex]
-		xx += record[xIndex] * record[xIndex]
-		xy += record[xIndex] * record[yIndex]
-		yy += record[yIndex] * record[yIndex]
+		Sx += record[xIndex]
+		Sy += record[yIndex]
 	}
 
-	return Sums{x, y, xx, xy, yy}
+	meanX := Sx / n
+	meanY := Sy / n
+
+	SSxx := 0.0
+	SSyy := 0.0
+	SSxy := 0.0
+	for _, record := range records {
+		SSxx += (record[xIndex] - meanX) * (record[xIndex] - meanX)
+		SSyy += (record[yIndex] - meanY) * (record[yIndex] - meanY)
+		SSxy += (record[xIndex] - meanX) * (record[yIndex] - meanY)
+	}
+
+	return Statistics{n, Sx, Sy, meanX, meanY, SSxx, SSyy, SSxy}
 }
 
 func LeastSquaresFit(records [][]float64, xIndex int, yIndex int) (float64, float64, float64, float64, float64) {
-	sums := calculateSums(records, xIndex, yIndex)
+	stats := calculateStats(records, xIndex, yIndex)
 
-	n := float64(len(records))
-	m := (n*sums.xy - sums.x*sums.y) / (n*sums.xx - sums.x*sums.x)
-	b := (sums.y - m*sums.x) / n
-	rSquared := (sums.xy * sums.xy) / (sums.xx * sums.yy)
-	standardDeviationSquared := (sums.yy - (sums.xy * sums.xy / sums.xx)) / (n - 2)
-	standardDeviation := math.Sqrt(math.Abs(standardDeviationSquared))
-	meanX := sums.x / n
+	m := stats.SSxy / stats.SSxx
+	b := stats.meanY - m * stats.meanX
 
-	dm := standardDeviation * math.Sqrt((1.0/n)+(meanX*meanX/sums.xx))
-	db := standardDeviation / math.Sqrt(sums.xx)
+	// Calculate the standard error of the estimate (SSE)
+	SSE := 0.0
+	for _, record := range records {
+		y_hat := m*record[xIndex] + b
+		SSE += ((record[yIndex] - y_hat) * (record[yIndex] - y_hat))
+	}
 
+	// Calculate the variance of the residuals
+	var_yx := SSE / (stats.n - 2)
+
+	// Calculate the variance and standard deviation of the slope
+	var_m := var_yx / stats.SSxx
+	s_m := math.Sqrt(var_m)
+
+	// 95% confidence interval for the slope
+	dm := 2 * s_m
+
+	// Calculate the variance and standard deviation of the intercept
+  var_b := var_yx * (1.0/stats.n + (stats.meanX * stats.meanX / stats.SSxx))
+	s_b := math.Sqrt(var_b)
+
+	// 95% confidence interval for the intercept
+	db := 2 * s_b
+
+	// Calculate R-squared
+	SSR := stats.SSyy - SSE
+	rSquared := SSR / stats.SSyy
+	
 	return m, dm, b, db, rSquared
 }
