@@ -41,9 +41,9 @@ Least Squares Fit of ./data/data.csv - column 1 versus column 0
 [5      4.97    16.88   ]
 [6      6.02    19.93   ]
 
-m: 0.9966 ± 0.0213
-b: 0.0020 ± 0.0041
-rr: 0.9999
+m: 0.9966 ± 0.0185
+b: 0.0020 ± 0.0721
+rr: 0.9997
 n: 6
 ```
 
