@@ -27,8 +27,8 @@ func maybeOutputData(verbose bool, floatRecords [][]float64) {
 }
 
 func outputResult(m float64, dm float64, b float64, db float64, rr float64, n int) {
-	fmt.Printf("m: %.4f ± %.4f\n", m, dm)
-	fmt.Printf("b: %.4f ± %.4f\n", b, db)
+	fmt.Printf("m: %.4f ± %.1g\n", m, dm)
+	fmt.Printf("b: %.4f ± %.1g\n", b, db)
 	fmt.Printf("rr: %.4f\n", rr)
 	fmt.Printf("n: %d\n", n)
 }
