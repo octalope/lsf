@@ -2,13 +2,14 @@ package dataReader
 
 import (
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
 
-func Read(fileName string, xIndex int, yIndex int) (floatRecords [][]float64, n int) {
+func Read(fileName string, xIndex int, yIndex int) (floatRecords [][]float64, e error) {
 	records, err := readCsvFile(fileName)
 	if err != nil {
 		fmt.Println("Error reading CSV file", err)
@@ -16,27 +17,24 @@ func Read(fileName string, xIndex int, yIndex int) (floatRecords [][]float64, n 
 	}
 
 	floatRecords, n, cols, err := convertStringRecordsToFloat(records)
+
 	if err != nil {
-		fmt.Println("Error converting string records to float records", err)
-		os.Exit(1)
+		return floatRecords, fmt.Errorf("error converting string records to float records: %w", err)
 	}
 
 	if n < 3 {
-		fmt.Println("Data set must have 3 or more points.")
-		os.Exit(1)
+		return floatRecords, errors.New("data set must have 3 or more points")
 	}
 
 	if xIndex < 0 || xIndex >= cols {
-		fmt.Println("x column index must be between 0 and", cols-1, ".")
-		os.Exit(1)
+		return floatRecords, fmt.Errorf("x column index must be between 0 and %d", cols-1)
 	}
 
 	if yIndex < 0 || yIndex >= cols {
-		fmt.Println("y column index must be between 0 and", cols-1, ".")
-		os.Exit(1)
+		return floatRecords, fmt.Errorf("y column index must be between 0 and %d", cols-1)
 	}
 
-	return floatRecords, n
+	return floatRecords, nil
 }
 
 func readCsvFile(filePath string) ([][]string, error) {
