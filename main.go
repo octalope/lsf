@@ -38,9 +38,14 @@ func main() {
 
 	fmt.Print("Least Squares Fit of ", args.FileName, " - column ", args.YIndex, " versus column ", args.XIndex, "\n")
 
-	floatRecords, n := dataReader.Read(args.FileName, args.XIndex, args.YIndex)
+	floatRecords, err := dataReader.Read(args.FileName, args.XIndex, args.YIndex)
+	if err != nil {
+		fmt.Println("Error reading data:", err)
+		return
+	}
+
 	m, dm, b, db, rSquared := stats.LeastSquaresFit(floatRecords, args.XIndex, args.YIndex)
 
 	maybeOutputData(args.Verbose, floatRecords)
-	outputResult(m, dm, b, db, rSquared, n)
+	outputResult(m, dm, b, db, rSquared, len(floatRecords))
 }
