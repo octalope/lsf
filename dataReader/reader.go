@@ -12,8 +12,7 @@ import (
 func Read(fileName string, xIndex int, yIndex int) (floatRecords [][]float64, e error) {
 	records, err := readCsvFile(fileName)
 	if err != nil {
-		fmt.Println("Error reading CSV file", err)
-		os.Exit(1)
+		return floatRecords, fmt.Errorf("error reading CSV file: %w", err)
 	}
 
 	floatRecords, n, cols, err := convertStringRecordsToFloat(records)
