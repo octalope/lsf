@@ -34,17 +34,19 @@ func outputResult(m float64, dm float64, b float64, db float64, rr float64, n in
 }
 
 func main() {
-	args := args.Parse()
+	var args args.Arguments = args.Parse()
 
 	fmt.Print("Least Squares Fit of ", args.FileName, " - column ", args.YIndex, " versus column ", args.XIndex, "\n")
 
-	floatRecords, err := dataReader.Read(args.FileName, args.XIndex, args.YIndex)
+	var floatRecords [][]float64
+	var err error
+	floatRecords, err = dataReader.Read(args.FileName, args.XIndex, args.YIndex)
 	if err != nil {
 		fmt.Println("Error reading data:", err)
 		return
 	}
 
-	m, dm, b, db, rSquared := stats.LeastSquaresFit(floatRecords, args.XIndex, args.YIndex)
+	var m, dm, b, db, rSquared float64 = stats.LeastSquaresFit(floatRecords, args.XIndex, args.YIndex)
 
 	maybeOutputData(args.Verbose, floatRecords)
 	outputResult(m, dm, b, db, rSquared, len(floatRecords))
